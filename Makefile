@@ -3,6 +3,8 @@
 
 DOCKER_BUILDER := default
 
+ARCH := multi
+
 # Export with value expected by docker
 export DOCKER_BUILDKIT=1
 
@@ -27,7 +29,7 @@ ifdef ARCH
   endif
   DOCKER_FLAGS += --push --platform $(DOCKER_PLATFORMS)
 else
-  # ARCH not specified, build for the host platfrom without pushing, mimicking regular docker build
+  # ARCH not specified, build for the host platform without pushing, mimicking regular docker build
   DOCKER_FLAGS += --load
 endif
 DOCKER_BUILDER := $(shell docker buildx ls | grep -E -e "[a-zA-Z0-9-]+ \*" | cut -d ' ' -f1)
@@ -37,11 +39,11 @@ DOCKER_BUILDER := $(shell docker buildx ls | grep -E -e "[a-zA-Z0-9-]+ \*" | cut
 builder-info: ## Print information about the docker builder that will be used for building images.
 	@echo "Using Docker Buildx builder \"$(DOCKER_BUILDER)\" with build flags \"$(DOCKER_FLAGS)\"."
 
-DOCKER_REGISTRY ?= quay.io
+DOCKER_REGISTRY ?= docker.io
 
 # Set DOCKER_DEV_ACCOUNT with "cilium" by default
 ifeq ($(DOCKER_DEV_ACCOUNT),)
-    DOCKER_DEV_ACCOUNT=cilium
+    DOCKER_DEV_ACCOUNT=bmutziu
 endif
 
 # Set DOCKER_IMAGE_TAG with "latest" by default
